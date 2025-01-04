@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products | Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../dist/assets/styles/main.css">
+
+</head>
+<body>
+    <div id="dashboard">
+        <aside id="sidebar">
+            <h2>Dashboard</h2>
+            <nav>
+                <ul>
+                    <li>
+                        <a href="index.html">
+                            <i class="fas fa-home"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="products.html">
+                            <i class="fas fa-box"></i>
+                            Products
+                        </a>
+                    </li>
+                    <li>
+                        <a href="categories.html">
+                            <i class="fas fa-tags"></i>
+                            Categories
+                        </a>
+                    </li>
+                    <li>
+                        <a href="users.html">
+                            <i class="fas fa-users"></i>
+                            Users
+                        </a>
+                    </li>
+                    <li>
+                        <a href="settings.html">
+                            <i class="fas fa-cog"></i>
+                            Settings
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+
+        <main id="main-content">
+            <div class="products-header">
+                <div class="header-content">
+                    <h1>Products</h1>
+                    <p class="text-muted">Manage your products and inventory</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-file-export"></i>
+                        Export
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-file-import"></i>
+                        Import
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Add product
+                    </button>
+                </div>
+            </div>
+
+            <div class="products-toolbar">
+                <div class="toolbar-left">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search products">
+                    </div>
+                </div>
+                <div class="toolbar-right">
+                    <div class="filter-group">
+                        <button class="btn btn-filter">
+                            <i class="fas fa-filter"></i>
+                            Filter
+                        </button>
+                        <button class="btn btn-filter">
+                            <i class="fas fa-sort"></i>
+                            Sort
+                        </button>
+                    </div>
+                    <div class="view-options">
+                        <button class="btn-icon active" data-view="table">
+                            <i class="fas fa-list"></i>
+                        </button>
+                        <button class="btn-icon" data-view="grid">
+                            <i class="fas fa-grid"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="products-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" class="select-all">
+                            </th>
+                            <th>Product</th>
+                            <th>Status</th>
+                            <th>Inventory</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-list">
+                        <!-- Products will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <div class="pagination-info">
+                    Showing <span>1-10</span> of <span>100</span> products
+                </div>
+                <div class="pagination-controls">
+                    <button class="btn-icon" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="page-numbers">
+                        <button class="active">1</button>
+                        <button>2</button>
+                        <button>3</button>
+                        <span>...</span>
+                        <button>10</button>
+                    </div>
+                    <button class="btn-icon">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Product Row Template -->
+    <template id="product-row-template">
+        <tr>
+            <td>
+                <input type="checkbox" class="select-product">
+            </td>
+            <td class="product-cell">
+                <img src="" alt="" class="product-thumbnail">
+                <div class="product-info">
+                    <div class="product-title"></div>
+                    <div class="product-id"></div>
+                </div>
+            </td>
+            <td class="status-cell">
+                <span class="status-badge"></span>
+            </td>
+            <td class="inventory-cell">
+                <span class="inventory-count"></span>
+            </td>
+            <td class="category-cell"></td>
+            <td class="price-cell"></td>
+            <td class="actions-cell">
+                <button class="btn-icon">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn-icon">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+            </td>
+        </tr>
+    </template>
+
+    <script src="js/products.js"></script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+@use 'mixins' as *;
+
+#sidebar {
+    background: linear-gradient(180deg, #2C3E50 0%, #1A252F 100%);
+    color: white;
+    width: 280px;
+    height: 100vh;
+    position: fixed;  // This is causing the overlap
+    top: 0;
+    left: 0;
+    padding: 2rem 1.5rem;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;  // Add this to include padding in width calculation
+    z-index: 1000; 
+    
+    // Modern scrollbar
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 3px;
+    }
+  
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1rem;
+      text-align: left;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      
+      // Optional: Add a small accent
+      position: relative;
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 50px;
+        height: 2px;
+        background: #3498db;
+      }
+    }
+  
+    nav {
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+  
+        li {
+          margin: 0.5rem 0;
+  
+          a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            @include hover-transition;
+            
+            // Add icons before text (you'll need to add icon font or SVGs)
+            i {
+              margin-right: 12px;
+              font-size: 1.2rem;
+            }
+  
+            &:hover {
+              color: white;
+              background: rgba(255, 255, 255, 0.1);
+              transform: translateX(5px);
+            }
+  
+            &.active {
+              background: rgba(52, 152, 219, 0.2);
+              color: #3498db;
+              font-weight: 500;
+              
+              // Optional: Add subtle glow effect
+              box-shadow: 0 0 20px rgba(52, 152, 219, 0.1);
+            }
+          }
+        }
+      }
+    }
+  
+    // Optional: Add user profile section at the bottom
+    .user-profile {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 1rem 1.5rem;
+      @include glass-effect;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+  
+      .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        overflow: hidden;
+        
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+  
+      .user-info {
+        flex: 1;
+        
+        .name {
+          font-size: 0.9rem;
+          font-weight: 500;
+          margin: 0;
+        }
+        
+        .role {
+          font-size: 0.8rem;
+          color: rgba(255, 255, 255, 0.6);
+          margin: 0;
+        }
+      }
+    }
+  }
