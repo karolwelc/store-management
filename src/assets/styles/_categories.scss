@@ -1,0 +1,59 @@
+// Style główne kontenera kategorii
+#categories-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); // Maksymalnie 5 kolumn
+    gap: 20px; // Odstępy między kartami
+    padding: 20px;
+    background-color: #f9f9f9; // Tło kontenera
+    border-radius: 10px; // Zaokrąglenia rogów kontenera
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Subtelny cień
+  
+    @media screen and (max-width: 1200px) {
+      grid-template-columns: repeat(4, 1fr); // 4 kolumny na mniejszych ekranach
+    }
+  
+    @media screen and (max-width: 992px) {
+      grid-template-columns: repeat(3, 1fr); // 3 kolumny na tabletach
+    }
+  
+    @media screen and (max-width: 768px) {
+      grid-template-columns: repeat(2, 1fr); // 2 kolumny na małych ekranach
+    }
+  
+    @media screen and (max-width: 480px) {
+      grid-template-columns: repeat(1, 1fr); // 1 kolumna na bardzo małych ekranach
+    }
+  }
+  
+  // Styl dla pojedynczej kategorii
+  .category-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 15px;
+    background-color: #fff; // Tło kart
+    border: 1px solid #ddd; // Obramowanie kart
+    border-radius: 8px; // Zaokrąglenia rogów kart
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); // Lekki cień
+    font-size: 14px; // Zmniejszona czcionka
+    font-weight: 500; // Lżejsza czcionka
+    color: #555; // Subtelniejszy kolor tekstu
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+    &:hover {
+      transform: translateY(-5px); // Subtelne podniesienie przy najechaniu
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); // Intensywniejszy cień
+    }
+  }
+  
+  // Stylizacja dla treści w trybie ładowania
+  #categories-container p {
+    font-size: 16px; // Mniejsza czcionka
+    font-weight: 400; // Jeszcze lżejsza czcionka
+    color: #777; // Neutralny kolor
+    text-align: center;
+    grid-column: 1 / -1; // Zajmuje całą szerokość kontenera
+  }
+  

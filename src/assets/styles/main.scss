@@ -2,7 +2,8 @@
 @use 'mixins' as *;
 @use 'sidebar';
 @use 'products'; 
-
+@use 'users';
+@use 'categories';
 // Base styles
 body {
   font-family: 'Inter', sans-serif;
@@ -129,7 +130,7 @@ body {
 
 // Modern stat cards
 .stats-card {
-  grid-column: span 4;
+  grid-column: span 6;
   background: white;
   padding: 1.5rem;
   border-radius: 16px;
@@ -184,12 +185,8 @@ body {
   padding: 1.5rem;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  grid-column: span 6;
   
-  // Make charts different sizes
-  &:nth-child(4) { grid-column: span 8; }  // Category chart
-  &:nth-child(5) { grid-column: span 4; }  // Price chart
-  &:nth-child(6) { grid-column: span 12; } // Rating chart
-
   h3 {
     color: #1e293b;
     font-size: 1.125rem;
@@ -220,9 +217,15 @@ body {
     }
   }
 
+  .chart-wrapper {
+    position: relative;
+    height: 300px;  // Fixed height for charts
+    width: 100%;
+  }
+
   canvas {
     width: 100% !important;
-    height: 300px !important;
+    height: 100% !important;
   }
 }
 

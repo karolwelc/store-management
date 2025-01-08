@@ -3,6 +3,7 @@ class ProductsManager {
       this.products = [];
       this.currentPage = 1;
       this.itemsPerPage = 10;
+      this.currentProduct = null;
       this.initializeElements();
       this.setupEventListeners();
       this.fetchProducts();
@@ -13,11 +14,28 @@ class ProductsManager {
       this.productTemplate = document.getElementById('product-row-template');
       this.searchInput = document.querySelector('.search-bar input');
       this.selectAll = document.querySelector('.select-all');
+      this.productDetailsModal = document.getElementById('product-details-modal');
     }
   
     setupEventListeners() {
       this.searchInput?.addEventListener('input', () => this.filterProducts());
       this.selectAll?.addEventListener('change', (e) => this.toggleSelectAll(e.target.checked));
+      this.productsList?.addEventListener('click', (e) => {
+        const productRow = e.target.closest('tr');
+        if (productRow) {
+          const productId = productRow.dataset.productId;
+          if (productId) {
+            this.showProductDetails(productId);
+          }
+        }
+      });
+
+      // Close modal when clicking outside or on close button
+      document.addEventListener('click', (e) => {
+        if (e.target.matches('.modal-overlay') || e.target.matches('.modal-close')) {
+          this.hideProductDetails();
+        }
+      });
     }
   
     async fetchProducts() {
@@ -42,26 +60,49 @@ class ProductsManager {
       paginatedProducts.forEach(product => {
         const row = this.productTemplate.content.cloneNode(true);
         
+        // Image
         const img = row.querySelector('.product-thumbnail');
-        img.src = product.thumbnail;
-        img.alt = product.title;
+        if (img) {
+            img.src = product.thumbnail;
+            img.alt = product.title;
+        }
         
-        row.querySelector('.product-title').textContent = product.title;
-        row.querySelector('.product-id').textContent = `SKU: ${product.id}`;
-        
-        const statusBadge = row.querySelector('.status-badge');
-        statusBadge.textContent = product.stock > 0 ? 'Active' : 'Out of stock';
-        statusBadge.classList.add(product.stock > 0 ? 'active' : 'draft');
-        
-        row.querySelector('.inventory-count').textContent = product.stock;
-        
-        row.querySelector('.category-cell').textContent = 
-          product.category.charAt(0).toUpperCase() + product.category.slice(1);
-        
-        row.querySelector('.price-cell').textContent = 
-          new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
-            .format(product.price);
-  
+        // Name
+        const titleCell = row.querySelector('.product-title');
+        if (titleCell) {
+            titleCell.textContent = product.title;
+        }
+
+        // SKU
+        const idCell = row.querySelector('.product-id');
+        if (idCell) {
+            idCell.textContent = `SKU-${product.id.toString().padStart(6, '0')}`;
+        }
+
+        // Inventory
+        const inventoryCount = row.querySelector('.inventory-count');
+        if (inventoryCount) {
+            inventoryCount.textContent = product.stock;
+        }
+
+        // Category
+        const categoryCell = row.querySelector('.category-cell');
+        if (categoryCell) {
+            categoryCell.textContent = product.category.charAt(0).toUpperCase() + 
+                                     product.category.slice(1);
+        }
+
+        // Price
+        const priceCell = row.querySelector('.price-cell');
+        if (priceCell) {
+            priceCell.textContent = new Intl.NumberFormat('en-US', 
+                { style: 'currency', currency: 'USD' }
+            ).format(product.price);
+        }
+
+        // Add product ID to the row
+        row.querySelector('tr').dataset.productId = product.id;
+
         this.productsList.appendChild(row);
       });
   
@@ -123,6 +164,64 @@ class ProductsManager {
       );
       this.currentPage = 1;
       this.renderProducts(filtered);
+    }
+  
+    async showProductDetails(productId) {
+      try {
+        const response = await fetch(`https://dummyjson.com/products/${productId}`);
+        const product = await response.json();
+        
+        this.productDetailsModal.innerHTML = this.generateProductDetailsHTML(product);
+        this.productDetailsModal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+      } catch (error) {
+        console.error('Error fetching product details:', error);
+      }
+    }
+  
+    hideProductDetails() {
+      this.productDetailsModal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  
+    generateProductDetailsHTML(product) {
+      return `
+        <div class="modal-overlay">
+          <div class="modal-content">
+            <button class="modal-close">×</button>
+            <div class="product-details">
+              <div class="product-images">
+                <img src="${product.thumbnail}" alt="${product.title}" class="main-image">
+                <div class="image-gallery">
+                  ${product.images.map(img => `
+                    <img src="${img}" alt="${product.title}" class="thumbnail">
+                  `).join('')}
+                </div>
+              </div>
+              <div class="product-info">
+                <h2>${product.title}</h2>
+                <div class="product-meta">
+                  <span class="brand">Brand: ${product.brand}</span>
+                  <span class="category">Category: ${product.category}</span>
+                </div>
+                <div class="rating">
+                  <span class="stars" style="--rating: ${product.rating}"></span>
+                  <span class="rating-value">${product.rating}/5</span>
+                </div>
+                <p class="description">${product.description}</p>
+                <div class="price-stock">
+                  <div class="price">
+                    <span class="current-price">$${product.price}</span>
+                    ${product.discountPercentage ? `
+                      <span class="discount">-${Math.round(product.discountPercentage)}%</span>
+                    ` : ''}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
     }
   }
   

@@ -1,135 +1,150 @@
-// Add this to your dashboard.js file
-document.addEventListener('DOMContentLoaded', function() {
-  const filterButtons = document.querySelectorAll('.quick-filters button');
-  
-  filterButtons.forEach(button => {
-      button.addEventListener('click', function() {
-          // Remove active class from all buttons
-          filterButtons.forEach(btn => btn.classList.remove('active'));
-          
-          this.classList.add('active');
-          
-          const timePeriod = this.textContent;
-          
-          console.log('Selected time period:', timePeriod);
-      });
-  });
+// Fetch and initialize charts when the DOM is loaded
+document.addEventListener('DOMContentLoaded', async function() {
+    try {
+        // Fetch products from dummyJSON API
+        const response = await fetch('https://dummyjson.com/products');
+        const data = await response.json();
+        const products = data.products;
+        
+        // Update stats
+        updateStats(products);
+        
+        // Create charts
+        createCharts(products);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
 });
+
+function updateStats(products) {
+    try {
+        // Total Products
+        document.getElementById('totalProducts').textContent = products.length;
+        document.getElementById('productTrend').textContent = '12.5% from last month';
+
+        // Average Rating
+        const avgRating = (products.reduce((sum, p) => sum + p.rating, 0) / products.length).toFixed(1);
+        document.getElementById('avgRating').textContent = avgRating;
+        document.getElementById('ratingTrend').textContent = 'Based on all products';
+    } catch (error) {
+        console.error('Error updating stats:', error);
+    }
+}
+
 function createCharts(products) {
-  Chart.defaults.font.family = "'Inter', sans-serif";
-  Chart.defaults.font.size = 13;
-  Chart.defaults.color = '#64748b';
-  Chart.defaults.plugins.legend.position = 'bottom';
+    // Set default styles for all charts
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.font.size = 13;
+    Chart.defaults.color = '#64748b';
+    
+    createCategoryChart(products);
+    createPriceDistributionChart(products);
+}
 
-  const categoryData = {};
-  products.forEach(product => {
-    categoryData[product.category] = (categoryData[product.category] || 0) + 1;
-  });
+function createCategoryChart(products) {
+    try {
+        const ctx = document.getElementById('categoryChart');
+        if (!ctx) return;
 
-  new Chart(document.getElementById('categoryChart'), {
-    type: 'bar',
-    data: {
-      labels: Object.keys(categoryData),
-      datasets: [{
-        label: 'Products',
-        data: Object.values(categoryData),
-        backgroundColor: '#3b82f6',
-        borderRadius: 8,
-        maxBarThickness: 40
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        }
-      },
-      scales: {
-        y: {
-          grid: {
-            display: false
-          }
+        const categoryData = products.reduce((acc, product) => {
+            acc[product.category] = (acc[product.category] || 0) + 1;
+            return acc;
+        }, {});
+
+        const colors = [
+            '#3b82f6', '#10b981', '#f59e0b', '#ef4444',
+            '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16'
+        ];
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(categoryData),
+                datasets: [{
+                    data: Object.values(categoryData),
+                    backgroundColor: colors,
+                    borderRadius: 8,
+                    maxBarThickness: 40
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1e293b',
+                        padding: 12,
+                        cornerRadius: 8,
+                        titleFont: { size: 14 },
+                        bodyFont: { size: 13 }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { 
+                            display: true,
+                            color: '#e2e8f0'
+                        }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { 
+                            maxRotation: 45, 
+                            minRotation: 45,
+                            font: {
+                                size: 11
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error creating category chart:', error);
+    }
+}
+
+function createPriceDistributionChart(products) {
+    const priceRanges = {
+        '$0-50': products.filter(p => p.price <= 50).length,
+        '$51-200': products.filter(p => p.price > 50 && p.price <= 200).length,
+        '$201-500': products.filter(p => p.price > 200 && p.price <= 500).length,
+        '$500+': products.filter(p => p.price > 500).length
+    };
+
+    new Chart(document.getElementById('priceChart'), {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(priceRanges),
+            datasets: [{
+                data: Object.values(priceRanges),
+                backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'],
+                borderWidth: 0,
+                cutout: '75%'
+            }]
         },
-        x: {
-          grid: {
-            display: false
-          }
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        usePointStyle: true,
+                        pointStyle: 'circle'
+                    }
+                },
+                tooltip: {
+                    backgroundColor: '#1e293b',
+                    padding: 12,
+                    cornerRadius: 8,
+                    titleFont: { size: 14 },
+                    bodyFont: { size: 13 }
+                }
+            }
         }
-      }
-    }
-  });
-
-  // Price Distribution Chart
-  new Chart(document.getElementById('priceChart'), {
-    type: 'doughnut',
-    data: {
-      labels: ['$0-50', '$51-100', '$101-200', '$201+'],
-      datasets: [{
-        data: [
-          products.filter(p => p.price <= 50).length,
-          products.filter(p => p.price > 50 && p.price <= 100).length,
-          products.filter(p => p.price > 100 && p.price <= 200).length,
-          products.filter(p => p.price > 200).length
-        ],
-        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'],
-        borderWidth: 0,
-        cutout: '75%'
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: {
-            padding: 20
-          }
-        }
-      }
-    }
-  });
-
-  const topRated = products
-    .sort((a, b) => b.rating - a.rating)
-    .slice(0, 8);
-
-  new Chart(document.getElementById('ratingChart'), {
-    type: 'bar',
-    data: {
-      labels: topRated.map(p => p.title.substring(0, 20) + '...'),
-      datasets: [{
-        label: 'Rating',
-        data: topRated.map(p => p.rating),
-        backgroundColor: '#10b981',
-        borderRadius: 8,
-        maxBarThickness: 40
-      }]
-    },
-    options: {
-      indexAxis: 'y',
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        }
-      },
-      scales: {
-        x: {
-          grid: {
-            display: false
-          },
-          max: 5
-        },
-        y: {
-          grid: {
-            display: false
-          }
-        }
-      }
-    }
-  });
+    });
 }

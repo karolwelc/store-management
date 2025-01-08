@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users | Dashboard</title>
+    <link rel="stylesheet" href="../dist/assets/styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+    <div id="dashboard">
+
+        <aside id="sidebar">
+            <h2>Dashboard</h2>
+            <nav>
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="products.html"><i class="fas fa-box"></i> Products</a></li>
+                    <li><a href="categories.html"><i class="fas fa-tags"></i> Categories</a></li>
+                    <li><a href="users.html" class="active"><i class="fas fa-users"></i> Users</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main id="main-content">
+            <header>
+                <h1>Users</h1>
+            </header>
+
+            <!-- Toolbar with search input -->
+            <div class="users-toolbar">
+                <div class="toolbar-left">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search users...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table displaying users -->
+            <div class="users-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Imię</th>
+                            <th>Nazwisko</th>
+                            <th>Email</th>
+                            <th>Akcje</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-list">
+                        <!-- Users will be dynamically populated here -->
+                        <tr>
+                            <td>Loading...</td>
+                            <td>Loading...</td>
+                            <td>Loading...</td>
+                            <td>Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal to display user details -->
+    <div id="user-details-modal">
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="product-details">
+                    <div class="product-images">
+                        <img src="" alt="User profile" class="main-image" id="user-details-image">
+                    </div>
+                    <div class="product-info">
+                        <h2 id="user-details-name"></h2>
+                        <div class="product-meta">
+                            <span id="user-details-email"></span>
+                        </div>
+                        <div class="description">
+                            <p><strong>Date of Birth:</strong> <span id="user-details-birthday"></span></p>
+                            <p><strong>Gender:</strong> <span id="user-details-gender"></span></p>
+                            <p><strong>Age:</strong> <span id="user-details-age"></span></p>
+                            <p><strong>Phone:</strong> <span id="user-details-phone"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add the JS script -->
+    <script src="js/users.js"></script>
+</body>
+
+</html>
